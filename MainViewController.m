@@ -14,7 +14,8 @@
 @property (strong, nonatomic) IBOutlet UIImageView *imageView;
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (nonatomic,assign) float distanceFromFrameY;
-//@property (nonatomic,assign) NSArray *myImages;
+@property (nonatomic,strong) NSArray *myImages;
+@property (nonatomic, strong) NSTimer *imageTimer;
 
 - (IBAction)onPanning:(UIPanGestureRecognizer *)sender;
 
@@ -40,9 +41,9 @@
     self.scrollView.contentSize = CGSizeMake(1500, 257);
     self.imageView.image = [UIImage imageNamed:@"headline0"];
     
-//    NSTimer *imageTimer = [NSTimer scheduledTimerWithTimeInterval:(5.0) target:self selector:@selector(changeImage) userInfo:nil repeats:YES];
-//    self.myImages=[NSArray arrayWithObjects:@"headline0",@"headline1",@"headline2",@"headline3",nil];
-//    [imageTimer fire];
+    self.imageTimer = [NSTimer scheduledTimerWithTimeInterval:(5.0) target:self selector:@selector(changeImage) userInfo:nil repeats:YES];
+    self.myImages=[NSArray arrayWithObjects:@"headline0",@"headline1",@"headline2",@"headline3",nil];
+    [self.imageTimer fire];
 }
 
 - (void)didReceiveMemoryWarning
@@ -74,9 +75,11 @@
         self.menuView.alpha = frame.origin.y/(self.view.frame.size.height-40);
         NSLog(@"menuView alpha = %f",self.menuView.alpha);
         if (self.distanceFromFrameY == 0) {
+            //store the distance between the first tapped Y axis and the frame's Y axis.
             self.distanceFromFrameY = location.y - frame.origin.y;
             NSLog(@"travelDistance = %f",self.distanceFromFrameY);
         }
+        //the frame Y is equal to the finger Y location - the distance between the finger Y and frame Y.
         frame.origin.y = location.y - self.distanceFromFrameY;
         NSLog(@"touch y = %f",location.y);
         NSLog(@"frame y = %f",frame.origin.y);
@@ -84,19 +87,26 @@
     }
 }
 
-//- (void)changeImage {
-//    NSLog(@"changeImage is called");
-//    static int i=0;
-//    
-//    if (i == 4){
-//        i=0;
-//    }
-//    
-//    self.imageView.alpha=1;
-//    NSLog(@"Index is %d", i);
-//    self.imageView.image =[UIImage imageNamed:[self.myImages objectAtIndex:i]];
-//    i++;
-//
-//}
+- (void)changeImage {
+    self.imageView.alpha=0;
+    NSLog(@"changeImage is called");
+    
+    static int i=0;
+    
+    if (i == 4){
+        i=0;
+    }
+
+    NSLog(@"Index is %d", i);
+    self.imageView.image =[UIImage imageNamed:[self.myImages objectAtIndex:i]];
+    i++;
+    
+    [UIView animateWithDuration:0.5 animations:^{
+        self.imageView.alpha=1;
+    }];
+
+}
+
+
 
 @end
