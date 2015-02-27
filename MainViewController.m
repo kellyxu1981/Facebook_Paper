@@ -101,9 +101,10 @@
     self.imageView.image =[UIImage imageNamed:[self.myImages objectAtIndex:i]];
     i++;
     
-    [UIView animateWithDuration:0.5 animations:^{
+    [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
         self.imageView.alpha=1;
-    }];
+    } completion:nil];
+
 
 }
 
